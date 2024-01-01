@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.annotation.AutoFill;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
@@ -75,14 +76,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Pattern.matches("\\d{11}", employeeDTO.getPhone()) && Pattern.matches("\\d{18}", employeeDTO.getIdNumber())) {
             Employee employee = new Employee();
             BeanUtils.copyProperties(employeeDTO, employee);
-            employee.setCreateTime(LocalDateTime.now());
-            employee.setUpdateTime(LocalDateTime.now());
+//            employee.setCreateTime(LocalDateTime.now());
+//            employee.setUpdateTime(LocalDateTime.now());
             employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
             // 获取当前操作人
-            Long operatorId = BaseContext.getCurrentId();
-            employee.setCreateUser(operatorId);
-            employee.setUpdateUser(operatorId);
+//            Long operatorId = BaseContext.getCurrentId();
+//            employee.setCreateUser(operatorId);
+//            employee.setUpdateUser(operatorId);
 
             try {
                 employeeMapper.insert(employee);
@@ -102,8 +103,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void ChangeStatus(Long id, Integer status) {
-        Employee employee = Employee.builder().id(id).status(status).
-                updateTime(LocalDateTime.now()).updateUser(BaseContext.getCurrentId()).build();
+        Employee employee = Employee.builder().id(id).status(status).build();
         employeeMapper.update(employee);
     }
 
@@ -118,8 +118,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
-        employee.setUpdateUser(BaseContext.getCurrentId());
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setUpdateTime(LocalDateTime.now());
         employeeMapper.update(employee);
     }
 
