@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.ShoppingCartMapper">
+    <sql id="common_where">
+        <where>
+            <if test="dishId != null">dish_id = #{dishId}</if>
+            <if test="setmealId != null">and setmeal_id = #{setmealId}</if>
+            <if test="dishFlavor != null">and dish_flavor = #{dishFlavor}</if>
+            and user_id = #{userId}
+        </where>
+    </sql>
+
+    <update id="addon">
+        update shopping_cart set number = #{number}
+        <include refid="common_where"></include>
+    </update>
+
+    <update id="sub">
+        update shopping_cart set number = #{number}
+        <include refid="common_where"></include>
+    </update>
+
+    <delete id="remove">
+        delete from shopping_cart
+        <include refid="common_where"></include>
+    </delete>
+
+    <select id="query" resultType="com.sky.entity.ShoppingCart">
+        select * from shopping_cart
+        <include refid="common_where"></include>
+    </select>
+</mapper>

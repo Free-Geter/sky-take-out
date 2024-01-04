@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,7 +66,7 @@ public class CategoryController {
     @GetMapping("/list")
     public Result<List<Category>> selectByType(Integer type) {
         log.info("查询{}类别的所有分类", type);
-        List<Category> categoryList =  categoryService.selectByType(type);
+        List<Category> categoryList = categoryService.selectByType(type);
         return Result.success(categoryList);
     }
 }

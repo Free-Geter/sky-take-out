@@ -36,4 +36,5 @@ public interface DishMapper {
     @Select("select * from dish where id = #{id}")
     DishVO selectById(Long id);
 
+
 }

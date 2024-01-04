@@ -12,6 +12,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class SetmealController {
 
     @ApiOperation(value = "新增套餐")
     @PostMapping
+//    @Caching(evict = @CacheEvict(cacheNames = "setmealCache", key = "#setmealDTO.categoryId"),
+//            put = @CachePut(cacheNames = "DishItemCache", key = "#setmealDTO.id"))
+    @CacheEvict(cacheNames = "setmealCache", key = "#setmealDTO.categoryId")
     public Result insert(@RequestBody SetmealDTO setmealDTO) {
         log.info("新增套餐{}", setmealDTO);
         setmealService.insert(setmealDTO);
@@ -43,6 +49,12 @@ public class SetmealController {
 
     @ApiOperation(value = "修改套餐")
     @PutMapping
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
+//    @CacheEvict(cacheNames = {"setmealCache","DishItemCache"}, allEntries = true)
+//    @Caching(evict = {
+//            @CacheEvict(cacheNames = {"setmealCache"}, key = "#setmealDTO.categoryId"),
+//            @CacheEvict(cacheNames = "DishItemCache", key = "#setmealDTO.id")
+//    })
     public Result update(@RequestBody SetmealDTO setmealDTO) {
         log.info("修改套餐{}", setmealDTO);
         setmealService.update(setmealDTO);
@@ -59,6 +71,7 @@ public class SetmealController {
 
     @ApiOperation(value = "修改套餐状态")
     @PostMapping("/status/{status}")
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public Result changeStatus(@PathVariable Integer status, Long id) {
         log.info("修改套餐状态,id：{}", id);
         setmealService.changeStatus(id, status);
@@ -67,6 +80,7 @@ public class SetmealController {
 
     @ApiOperation(value = "批量删除套餐")
     @DeleteMapping
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public Result deleteBatch(@RequestParam ArrayList<Long> ids) {
         log.info("批量删除套餐：{}", ids);
         setmealService.deleteBatch(ids);
