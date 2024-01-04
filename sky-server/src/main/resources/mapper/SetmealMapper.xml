@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealMapper">
+    <sql id="setmealWithCategory">
+        select category.name categoryName, setmeal.*
+        from setmeal
+                 left join category on setmeal.category_id = category.id
+    </sql>
+
+    <update id="update">
+        update setmeal
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="image != null and image !=''">image = #{image},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="price != null and price != ''">price = #{price},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBatch">
+        delete from setmeal where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="query" resultType="com.sky.entity.Setmeal">
+        select * from setmeal
+        <where>
+            <if test="categoryId != null">category_id = #{categoryId}</if>
+            <if test="name !=null and name !=''">and name like concat('%',#{name},'%')</if>
+            <if test="status != null">and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectDishBySetmeal" resultType="com.sky.vo.DishItemVO">
+        select *
+        from setmeal_dish sd
+                 left join dish d
+                           on sd.dish_id = d.id
+        where sd.setmeal_id = #{setmealId}
+    </select>
+
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        <include refid="setmealWithCategory"></include>
+        <where>
+            <if test="categoryId != null">setmeal.category_id = #{categoryId}</if>
+            <if test="name != null and name != ''">and setmeal.name like concat('%',#{name},'%')</if>
+            <if test="status != null">and setmeal.status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectById" resultType="com.sky.vo.SetmealVO">
+        <include refid="setmealWithCategory"></include>
+        where setmeal.id = #{id}
+    </select>
+
+</mapper>

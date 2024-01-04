@@ -86,7 +86,7 @@ public class DishServiceImpl implements DishService {
         List<DishFlavor> flavors = dishDTO.getFlavors();
         Long dishId = dishDTO.getId();
         dishFlavorMapper.deleteBatch(Collections.singletonList(dishDTO.getId()));
-        if (flavors != null && !flavors.isEmpty()){
+        if (flavors != null && !flavors.isEmpty()) {
             for (DishFlavor flavor : flavors) {
                 flavor.setDishId(dishId);
             }
@@ -107,13 +107,26 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public List<Dish> selectByCategoryId(Long categoryId) {
-
-        return dishMapper.selectByCategoryId(categoryId);
+        Dish dish = Dish.builder().categoryId(categoryId).build();
+        return dishMapper.query(dish);
     }
 
     @Override
     public void changeStatus(Long id, Integer status) {
         Dish dish = Dish.builder().id(id).status(status).build();
         dishMapper.update(dish);
+    }
+
+    @Override
+    public List<DishVO> listWithFlavor(Dish dish) {
+        List<Dish> dishes = dishMapper.query(dish);
+        List<DishVO> dishVOS = new ArrayList<>();
+        for (Dish dish1 : dishes) {
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(dish1, dishVO);
+            dishVO.setFlavors(dishFlavorMapper.selectByDishId(dish1.getId()));
+            dishVOS.add(dishVO);
+        }
+        return dishVOS;
     }
 }

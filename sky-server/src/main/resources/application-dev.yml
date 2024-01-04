@@ -12,7 +12,8 @@ sky:
     password: 123456
     database: 10
   alioss:
-    access-key-id: LTAI5tDFxe8gLUH9ms5XZ4z5
-    access-key-secret: 1dj0iWeYQH2IaPNuURS943cN0xDyNi
     endpoint: oss-cn-beijing.aliyuncs.com
     bucket-name: cl-web
+  wechat:
+    appid: wx5f12612d7623c322
+    secret: be71d49c24e777c01882f616e30743bd

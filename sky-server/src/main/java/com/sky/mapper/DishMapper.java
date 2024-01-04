@@ -2,7 +2,7 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
-import com.sky.dto.DishDTO;
+
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
@@ -14,8 +14,7 @@ import java.util.List;
 @Mapper
 public interface DishMapper {
 
-    @Select("select * from dish where category_id = #{categoryId}")
-    List<Dish> selectByCategoryId(Long categoryId);
+    List<Dish> query(Dish dish);
 
     @Select("select count(id) from dish where category_id = #{categoryId}")
     public Integer countByCategoryId(Long categoryId);
@@ -36,4 +35,5 @@ public interface DishMapper {
 
     @Select("select * from dish where id = #{id}")
     DishVO selectById(Long id);
+
 }
